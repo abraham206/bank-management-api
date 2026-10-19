@@ -39,10 +39,20 @@ export class TransactionsService {
       if (!user) {
         throw new NotFoundException('No user found!');
       }
-      const sender = await queryRunner.manager.findOne(AccountEntity, {
-        where: { accountNumber: senderAccountNumber },
-        relations: { user: true },
-      });
+      // const sender = await queryRunner.manager.findOne(AccountEntity, {
+      //   where: { accountNumber: senderAccountNumber },
+      //   relations: { user: true },
+      // });
+
+      const sender = await queryRunner.manager
+        .getRepository(AccountEntity)
+        .createQueryBuilder('account')
+        .setLock('pessimistic_write')
+        .where('account.accountNumber = :accountNumber', {
+          senderAccountNumber,
+        })
+        .getOne();
+
       if (!Number.isFinite(amount) || amount <= 0) {
         throw new BadRequestException('Invalid transfer amount');
       }
@@ -54,10 +64,14 @@ export class TransactionsService {
       if (!sender) {
         throw new NotFoundException('Account not found');
       }
-      const receiver = await queryRunner.manager.findOne(AccountEntity, {
-        where: { accountNumber: receiverAccountNumber },
-        relations: { user: true },
-      });
+      const receiver = await queryRunner.manager
+        .getRepository(AccountEntity)
+        .createQueryBuilder('account')
+        .setLock('pessimistic_write')
+        .where('account.accountNumber = :accountNumber', {
+          receiverAccountNumber,
+        })
+        .getOne();
       if (sender.user.id !== userId) {
         throw new ForbiddenException('You do not own this account');
       }
@@ -66,8 +80,12 @@ export class TransactionsService {
         throw new NotFoundException('Receiver account not found');
       }
 
-      const senderBalance = Number(sender.balance) * 100;
-      const receiverBalance = Number(receiver.balance) * 100;
+      if (sender.balance < amount) {
+        throw new BadRequestException('Insufficient Funds!!');
+      }
+
+      const senderBalance = Number(sender.balance);
+      const receiverBalance = Number(receiver.balance);
 
       if (senderBalance < amount) {
         throw new BadRequestException('Insufficient balance');

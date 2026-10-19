@@ -24,7 +24,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    const passwordMatches = helper.comparePassword(
+    const passwordMatches = await helper.comparePassword(
       loginDto.password,
       user.password,
     );

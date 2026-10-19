@@ -30,18 +30,20 @@ export class TransactionsController {
   transfer(
     @Req() req: AuthenticatedRequest,
     @Body()
-    body: {
-      senderAccountNumber: string;
-      receiverAccountNumber: string;
-      amount: number;
-    },
+    CreateTransactionDto: CreateTransactionDto,
   ) {
     return this.transactionsService.transfer(
       req.user.userId,
-      body.senderAccountNumber,
-      body.receiverAccountNumber,
-      body.amount,
+      CreateTransactionDto.senderAccountNumber,
+      CreateTransactionDto.recieverAccountNumber,
+      CreateTransactionDto.amount,
     );
+  }
+
+  // get all transactions
+  @Get('all-transactions')
+  all(@Req() req: AuthenticatedRequest) {
+    return this.transactionsService.getAllTransactions(req.user.userId);
   }
 
   // Get a particular transaction
@@ -54,10 +56,5 @@ export class TransactionsController {
       req.user.userId,
       transactionId,
     );
-  }
-
-  @Get('all-transactions')
-  all(@Req() req: AuthenticatedRequest) {
-    return this.transactionsService.getAllTransactions(req.user.userId);
   }
 }

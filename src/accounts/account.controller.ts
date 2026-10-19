@@ -25,7 +25,7 @@ export class AccountsController {
   constructor(private readonly accountsService: AccountsService) {}
 
   // Create account
-  @Get('create-account')
+  @Post('create-account')
   createAccount(@Req() req: AuthenticatedRequest) {
     return this.accountsService.createAccount(req.user.userId);
   }

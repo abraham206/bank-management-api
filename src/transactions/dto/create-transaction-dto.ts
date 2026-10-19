@@ -3,9 +3,13 @@ import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
 export class CreateTransactionDto {
   @IsNotEmpty()
   @IsString()
-  Amount: string;
+  amount: string;
 
   @IsNotEmpty()
   @IsString()
-  recipient: string;
+  senderAccountNumber: string;
+
+  @IsNotEmpty()
+  @IsString()
+  recieverAccountNumber: string;
 }

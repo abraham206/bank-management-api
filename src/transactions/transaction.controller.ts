@@ -36,7 +36,7 @@ export class TransactionsController {
       req.user.userId,
       CreateTransactionDto.senderAccountNumber,
       CreateTransactionDto.recieverAccountNumber,
-      CreateTransactionDto.amount,
+      +CreateTransactionDto.amount,
     );
   }
 

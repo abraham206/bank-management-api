@@ -14,7 +14,7 @@ export class AccountEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ default: '300000' })
+  @Column()
   balance: string;
 
   @Column({

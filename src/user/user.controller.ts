@@ -7,7 +7,7 @@ export default class User {
   constructor(private readonly userService: UserService) {}
 
   @Post('/createUser')
-  hello(@Body() createUserDto: CreateUserDto) {
+  createUser(@Body() createUserDto: CreateUserDto) {
     return this.userService.register(createUserDto);
   }
 }

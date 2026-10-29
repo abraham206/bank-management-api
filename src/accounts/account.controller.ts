@@ -42,7 +42,7 @@ export class AccountsController {
   }
 
   // View all accounts belonging to the logged-in user
-  @Get()
+  @Get('/all-accounts')
   getUserAccounts(@Req() req: AuthenticatedRequest) {
     return this.accountsService.getUserAccounts(req.user.userId);
   }

@@ -47,11 +47,14 @@ export class TransactionsService {
       const sender = await queryRunner.manager
         .getRepository(AccountEntity)
         .createQueryBuilder('account')
+        .innerJoinAndSelect('account.user', 'user')
         .setLock('pessimistic_write')
         .where('account.accountNumber = :accountNumber', {
-          senderAccountNumber,
+          accountNumber: senderAccountNumber,
         })
         .getOne();
+
+      console.log('sender', sender);
 
       if (!Number.isFinite(amount) || amount <= 0) {
         throw new BadRequestException('Invalid transfer amount');
@@ -69,7 +72,7 @@ export class TransactionsService {
         .createQueryBuilder('account')
         .setLock('pessimistic_write')
         .where('account.accountNumber = :accountNumber', {
-          receiverAccountNumber,
+          accountNumber: receiverAccountNumber,
         })
         .getOne();
       if (sender.user.id !== userId) {
@@ -96,11 +99,16 @@ export class TransactionsService {
       receiver.balance = (receiverBalance + amount).toFixed(2);
 
       await queryRunner.manager.save(AccountEntity, [sender, receiver]);
+      const date = new Date();
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const formattedDate = `${year}-${month}-${day}`;
 
       const transaction = queryRunner.manager.create(TransactionEntity, {
         amount: amount,
         accountNumber: receiver.accountNumber,
-        createdAt: Date.now(),
+        createdAt: formattedDate,
         user: { id: sender.id },
       });
       await queryRunner.manager.save(transaction);

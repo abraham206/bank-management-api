@@ -7,6 +7,7 @@ import { CreateUserDto } from './dto/create-user-dto.js';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entites/user-entities.js';
+import { User } from './interfaces/user-interface.js';
 
 import * as helper from '../common/helper.js';
 // import * as bcrypt from 'bcrypt';
@@ -18,9 +19,10 @@ export class UserService {
     private readonly userRepository: Repository<UserEntity>,
   ) {}
 
-  async findByEmail(email: string): Promise<UserEntity | null> {
+  async findByEmail(email: string): Promise<User | null> {
     const user = await this.userRepository.findOne({
       where: { email: email },
+      select: { password: true, name: true, email: true, id: true },
     });
 
     return user;

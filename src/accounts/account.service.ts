@@ -39,7 +39,7 @@ export class AccountsService {
     const formattedDate = `${year}-${month}-${day}`;
     const account = this.accountRepository.create({
       accountNumber: accountNumber,
-      balance: '0.00',
+      balance: '500000',
       user: { id: userId },
       createdAt: formattedDate,
     });

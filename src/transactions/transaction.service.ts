@@ -54,8 +54,6 @@ export class TransactionsService {
         })
         .getOne();
 
-      console.log('sender', sender);
-
       if (!Number.isFinite(amount) || amount <= 0) {
         throw new BadRequestException('Invalid transfer amount');
       }

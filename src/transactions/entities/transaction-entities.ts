@@ -17,9 +17,7 @@ export class TransactionEntity {
   @Column('decimal')
   amount: string;
 
-  @Column({
-    unique: true,
-  })
+  @Column()
   accountNumber: string;
 
   @CreateDateColumn()

@@ -35,7 +35,7 @@ export class UserService {
     }
     const result = await helper.hashPassword(password);
     const hashedPassword: any = result;
-    console.log('hashedPassword', hashedPassword);
+   
 
     const existingUser = await this.userRepository.findOne({
       where: { email: email },

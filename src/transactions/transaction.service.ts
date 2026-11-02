@@ -107,7 +107,7 @@ export class TransactionsService {
         amount: amount,
         accountNumber: receiver.accountNumber,
         createdAt: formattedDate,
-        user: { id: sender.id },
+        account: { id: sender.id },
       });
       await queryRunner.manager.save(transaction);
       await queryRunner.commitTransaction();

@@ -32,6 +32,13 @@ export class AccountsController {
 
   // 4698177137
 
+ // View all accounts belonging to the logged-in user
+
+  @Get('/all-accounts')
+  getUserAccounts(@Req() req: AuthenticatedRequest) {
+    return this.accountsService.getUserAccounts(req.user.userId);
+  }
+
   // View one account
   @Get(':accountId')
   getAccount(
@@ -39,12 +46,6 @@ export class AccountsController {
     @Param('accountId', ParseIntPipe) accountId: number,
   ) {
     return this.accountsService.getAccount(req.user.userId, accountId);
-  }
-
-  // View all accounts belonging to the logged-in user
-  @Get('/all-accounts')
-  getUserAccounts(@Req() req: AuthenticatedRequest) {
-    return this.accountsService.getUserAccounts(req.user.userId);
   }
 
   // Check balance
